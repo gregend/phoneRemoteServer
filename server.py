@@ -1,12 +1,13 @@
 import socket
 import sys
 import pyautogui
+import os
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Bind the socket to the port
-server_address = ('192.168.1.15', 3000)
+server_address = (os.popen("hostname -I").read().split(" ")[0], 3000)
 print('starting up on %s port %s' % server_address)
 sock.bind(server_address)
 
@@ -36,19 +37,22 @@ while(True):
                 pyautogui.rightClick()
             elif "&" in message:
                 x, y = message.split("&")
+                x = x.replace(",", ".")
+                y = y.replace(",", ".")
                 print("x: %s y: %s" % (x,y))
-                pyautogui.moveTo(int(x), int(y), 2)
+                # pyautogui.moveRel(float(x)*100, float(y)*100, 2)
             else:
                 print("else %s" % message)
                 pyautogui.press(str(message))
             # print('received "%s"' % bytes.decode(data))
-            if data:
-                print('sending data back to the client')
-                connection.sendall(data)
-            else:
-                print('no more data from %s %s' % client_address)
-                break     
+            # if data:
+            #     print('sending data back to the client')
+            #     connection.sendall(data)
+            # else:
+            #     print('no more data from %s %s' % client_address)
+            #     break     
     finally:
         # Clean up the connection
+        print('Closing')
         connection.close()
         break
