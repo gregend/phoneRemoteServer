@@ -13,7 +13,7 @@ sock.bind(server_address)
 
 # Listen for incoming connections
 sock.listen(1)
-
+keyPressed = ""
 while(True):
     # Wait for a connection
     print('waiting for a connection')
@@ -37,13 +37,20 @@ while(True):
                 pyautogui.rightClick()
             elif "&" in message:
                 x, y = message.split("&")
-                x = x.replace(",", ".")
-                y = y.replace(",", ".")
+                #x = x.replace(",", ".")
+                #y = y.replace(",", ".")
                 print("x: %s y: %s" % (x,y))
+                pyautogui.moveTo(x,y)
                 # pyautogui.moveRel(float(x)*100, float(y)*100, 2)
+            elif "#" in message:
+                keyPressed = message[1:]
+                print("#%s" % keyPressed)
+                
+                pyautogui.keyDown(keyPressed)
             else:
                 print("else %s" % message)
                 pyautogui.press(str(message))
+                pyautogui.keyUp(keyPressed)
             # print('received "%s"' % bytes.decode(data))
             # if data:
             #     print('sending data back to the client')
